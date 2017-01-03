@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -184,8 +184,24 @@ namespace DuplicateRemover
         {
             try
             {
-				Debug.WriteLine(string.Format("Removing {0}", fileName));
-                File.Delete(fileName);
+				Debug.WriteLine(string.Format("/*Re*/Moving {0}", fileName));
+                //File.Delete(fileName);
+                string subFileName = fileName.Substring(target.Length);
+                string[] subFileNameFolders = subFileName.Split(Path.DirectorySeparatorChar);
+
+                // create folders in c:\duplicate_moved\ from subFileNameFolders [1] to subFileNameFolders[length-2]
+                string newDir=@"c:\duplicate_moved\", newDirPiece;
+                for (int i = 1; i <= subFileNameFolders.Length - 2; i++)
+                {
+                    newDir += subFileNameFolders[i] + @"\";
+                    //string newDir = @"c:\duplicate_moved\"+subFileNameFolders[i];
+                    Directory.CreateDirectory(newDir);
+                }
+
+                string newFileName = @"C:\duplicate_moved" + subFileName;
+             //   Debug.Write(string.Format(" file {0}", splitFileName[1]));
+                File.Move(fileName, newFileName);
+                
             }
             catch (Exception)
             {
